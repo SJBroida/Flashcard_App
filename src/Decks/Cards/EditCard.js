@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 
 /* Card Structure Example
     {
@@ -10,6 +11,10 @@ import React from "react";
 */
 
 function EditCard() {
+
+    const params = useParams();
+    const deckId = params.deckId;
+    const cardId = params.cardId;
 
     return (
         <div>

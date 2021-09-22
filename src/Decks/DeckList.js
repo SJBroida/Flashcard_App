@@ -1,5 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+
+import { deleteDeck } from "../utils/api";
 
 import CardCounter from "./Cards/CardCounter";
 
@@ -12,6 +14,20 @@ import CardCounter from "./Cards/CardCounter";
 */
 
 function DeckList({ decks }) {
+
+    const history = useHistory();
+
+    async function deleteDeckHandler({deckId}) {
+        const abortController = new AbortController();
+        const signal = abortController.signal;
+        if(
+          window.confirm("Delete this deck?\n\nYou will not be able to recover it.")
+        ){
+          await deleteDeck(deckId, signal)
+          history.push("/")
+        }
+        return () => abortController.abort();
+    }
 
     return (
         <div>
