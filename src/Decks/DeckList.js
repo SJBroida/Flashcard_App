@@ -21,7 +21,10 @@ function DeckList({ decks }) {
                     <div className="card">
                         <div className="card-body">
                             <h2>{theDeck.name}</h2>
-                            <CardCounter deck={theDeck} />
+                            {/* Use CardCounter component to count the cards*/}
+                            <h6 className="mb-2 text-muted" >
+                                <CardCounter deckId={theDeck.id} />
+                            </h6>
                             <p>{theDeck.description}</p>
                             <Link to={`/decks/${theDeck.id}`}>
                                 <button className="btn btn-secondary">
@@ -38,7 +41,7 @@ function DeckList({ decks }) {
                             </Link>
 
                             <button className="btn btn-danger">
-                                <span className="oi oi-trash mr-2"></span>
+                                <span className="oi oi-trash"></span>
                             </button>
                         </div>
                     </div>

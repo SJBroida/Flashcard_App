@@ -60,7 +60,7 @@ function StudyDeck() {
                 </ol>
             </nav>
             <h1>Study: {deck.name}</h1>
-            <StudyCards selectedDeck={deck}/>
+            <StudyCards deckId={deckId}/>
         </div>
     );
 

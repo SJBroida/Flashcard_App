@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 
 import { listCards } from "../../utils/api";
 
-function StudyCards({selectedDeck}) {
+function StudyCards({deckId}) {
 
     const [cards, setCards] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -17,8 +17,8 @@ function StudyCards({selectedDeck}) {
         const signal = abortController.signal;
 
         async function fetchCards() {
-            console.log(selectedDeck.id);
-            const cardsData = await listCards(selectedDeck.id, signal);
+            console.log(deckId);
+            const cardsData = await listCards(deckId, signal);
             setCards(cardsData);
         }
 

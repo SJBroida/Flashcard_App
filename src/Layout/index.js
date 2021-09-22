@@ -8,6 +8,8 @@ import Deck from "../Decks/Deck.js";
 import CreateDeck from "../Decks/CreateDeck.js";
 import EditDeck from "../Decks/EditDeck.js";
 import StudyDeck from "../Decks/StudyDeck.js";
+import AddCard from "../Decks/Cards/AddCard.js"
+import EditCard from "../Decks/Cards/EditCard.js"
 
 import { Route, Switch } from "react-router-dom";
 
@@ -26,6 +28,14 @@ function Layout() {
           {/* The Create Page for an individual deck */}
           <Route path="/decks/new">
             <CreateDeck />
+          </Route>
+          {/* The Add Card Page for a specific deck */}
+          <Route path="/decks/:deckId/cards/new">
+            <AddCard />
+          </Route>
+          {/* The Edit Card Page for a card in a specific deck */}
+          <Route path="/decks/:deckId/cards/:cardId/edit">
+            <EditCard />
           </Route>
           {/* The Study Page for an individual deck */}
           <Route path="/decks/:deckId/study">
