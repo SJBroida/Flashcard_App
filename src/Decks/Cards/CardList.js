@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
-import { deleteCard, listCards } from "../../utils/api/index";
+import { listCards } from "../../utils/api/index";
+
+import Card from "./Card.js";
 
 /* Card Structure Example
     {
@@ -11,14 +12,12 @@ import { deleteCard, listCards } from "../../utils/api/index";
     }
 */
 
-function CardList({deckId}) {
+function CardList( {deckId} ) {
 
+    // Create a useState object for an array of cards.
     const [cards, setCards] = useState([]);
 
-    const history = useHistory();
-    const { url } = useRouteMatch();
-
-    useEffect(() => {
+    useEffect( () => {
         setCards([]);
         
         const abortController = new AbortController();
@@ -33,56 +32,18 @@ function CardList({deckId}) {
   
         return () => abortController.abort();
 
-    }, []);
+    }, [deckId]);
 
-    const listOfCards = cards.map((card) => {
-        return (
-            <div className="card" key={card.id}>
-                <div className="card-body">
-                    <div className="row">
-                        <div className="col">
-                            <p className="card-text">{card.front}</p>
-                        </div> {/* End of Div with ClassName "col */}
-                        <div className="col">
-                            <p className="card-text">{card.back}</p>
-                            <div className="float-right">
-                                <button
-                                    className="btn btn-secondary mx-1"
-                                    onClick={() => history.push(`${url}/cards/${card.id}/edit`)}
-                                >
-                                    <span className="oi oi-pencil mr-1"></span>
-                                    Edit
-                                </button>
-                                <button
-                                    className="btn btn-danger mx-1"
-                                    onClick={() => {
-                                        const confirmDeleteCard = window.confirm(
-                                            "Delete this card? \n \nYou will not be able to recover it."
-                                        );
-                                        if (confirmDeleteCard) {
-                                            const abortController = new AbortController();
-                                            const signal = abortController.signal;
-                                            deleteCard(card.id, signal);
-                                            history.go(0);
-                                        }
-                                    }}
-                                >
-                                    <span className="oi oi-trash"></span>
-                                </button>
-                            </div> {/* End of Div with ClassName "float-right" */}
-                        </div> {/* End of Div with ClassName "col */}
-                    </div> {/* End of Div with ClassName "row" */}
-                </div> {/* End of Div with ClassName "card-body" */} 
-            </div> // End of Div with ClassName "card"
-        );
-    });
+    const listOfCards = cards.map((card) => (
+            <Card card={card} deckId={deckId} />
+    ));
 
     return (
         <div>
+            <h3>Cards</h3>
             {listOfCards}
         </div>
     );
-
 }
 
 export default CardList;

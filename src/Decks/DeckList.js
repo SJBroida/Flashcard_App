@@ -56,7 +56,7 @@ function DeckList({ decks }) {
                                 </button>
                             </Link>
                             <div className="float-right">
-                                <button className="btn btn-danger">
+                                <button className="btn btn-danger" onClick={deleteDeckHandler}>
                                     <span className="oi oi-trash"></span>
                                 </button>
                             </div>

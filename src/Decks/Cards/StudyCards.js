@@ -19,7 +19,6 @@ function StudyCards({deckId}) {
         const signal = abortController.signal;
 
         async function fetchCards() {
-            console.log(deckId);
             const cardsData = await listCards(deckId, signal);
             setCards(cardsData);
         }
