@@ -36,14 +36,14 @@ function DeckList({ decks }) {
                 return (
                     <div className="card">
                         <div className="card-body">
-                            <h2>{theDeck.name}</h2>
                             {/* Use CardCounter component to count the cards*/}
-                            <h6 className="mb-2 text-muted" >
+                            <h6 className="mb-2 text-muted float-right" >
                                 <CardCounter deckId={theDeck.id} />
                             </h6>
+                            <h2>{theDeck.name}</h2>
                             <p>{theDeck.description}</p>
                             <Link to={`/decks/${theDeck.id}`}>
-                                <button className="btn btn-secondary">
+                                <button className="btn btn-secondary mr-2">
                                     <span className="oi oi-eye mr-2"></span>
                                     View
                                 </button>
@@ -55,10 +55,11 @@ function DeckList({ decks }) {
                                     Study
                                 </button>
                             </Link>
-
-                            <button className="btn btn-danger">
-                                <span className="oi oi-trash"></span>
-                            </button>
+                            <div className="float-right">
+                                <button className="btn btn-danger">
+                                    <span className="oi oi-trash"></span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 );

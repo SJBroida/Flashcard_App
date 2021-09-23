@@ -4,6 +4,7 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { deleteDeck, readDeck } from "../utils/api";
 
 import CardCounter from "./Cards/CardCounter.js";
+import CardList from "./Cards/CardList.js";
 
 /* Deck Structure Example
     {
@@ -15,7 +16,7 @@ import CardCounter from "./Cards/CardCounter.js";
 
 function Deck() {
     // Create useState object to hold deck
-    const [deck, setDeck] = useState({})
+    const [deck, setDeck] = useState({id: "", name: "", description: ""})
     // Pull parameter information from the URL
     const params = useParams();
     // Obtain the deckId from the parameters
@@ -88,11 +89,12 @@ function Deck() {
                             Add Cards
                         </button>
                     </Link>
-                    <button className="btn btn-danger ml-5" onClick={deleteDeckHandler}>
+                    <button className="btn btn-danger ml-5 float-right" onClick={deleteDeckHandler}>
                         <span className="oi oi-trash"></span>
                     </button>
                 </div>
             </div>
+            <CardList deckId={deckId}/>
         </div>
     );
 }

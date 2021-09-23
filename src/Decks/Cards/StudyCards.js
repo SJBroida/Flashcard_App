@@ -3,12 +3,14 @@ import { useHistory } from "react-router-dom";
 
 import { listCards } from "../../utils/api";
 
+import NotEnoughCards from "./NotEnoughCards";
+
 function StudyCards({deckId}) {
 
     const [cards, setCards] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [front, setFront] = useState(true);
-    const history = useHistory()
+    const history = useHistory();
 
     useEffect(() => {
         setCards([]);
@@ -29,17 +31,17 @@ function StudyCards({deckId}) {
     }, []);
 
     const flipButtonHandler = () => {
-        setFront(!front)
+        setFront(!front);
     }
     
     const nextButtonHandler = () => {
         if(currentIndex < cards.length -1){
-            setCurrentIndex(currentIndex +1)
-            setFront(true)
+            setCurrentIndex(currentIndex +1);
+            setFront(true);
         } else {
             if (window.confirm("Restart cards?\n\n Click 'Cancel' to return to home page")){
-                setCurrentIndex(0)
-                setFront(true)
+                setCurrentIndex(0);
+                setFront(true);
             } else {
                 history.push("/");
             }
@@ -51,6 +53,10 @@ function StudyCards({deckId}) {
         return (
             <div>Loading...</div>
         );
+    } else if(cards.length <=2) {
+        return (
+            <NotEnoughCards cards={cards} />
+        )
     } else {
         return (
             <div>

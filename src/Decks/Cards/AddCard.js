@@ -1,5 +1,7 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import CardForm from "./CardForm";
+import { readDeck } from "../../utils/api";
 
 
 /* Card Structure Example
@@ -12,13 +14,44 @@ import { useParams } from "react-router-dom";
 */
 
 function AddCard() {
-
+    // Create a UseState object to hold the deck the card goes to
+    const [deck, setDeck] = useState({});
+    // Obtain the Deck ID for this deck.
     const params = useParams();
     const deckId = params.deckId;
 
+	useEffect(() => {
+		const abortController = new AbortController();
+        const signal = abortController.signal;
+
+		async function fetchDeck() {
+			const response = await readDeck(deckId, signal);
+			setDeck(response);
+		}
+
+		fetchDeck();
+
+        return () => abortController.abort();
+
+	}, [deckId]);
+
     return (
         <div>
-            <h1>This is a placeholder, brah!</h1>
+            <nav aria-label="breadcrumb">
+                <ol className="breadcrumb">
+                    <li className="breadcrumb-item">
+                        <Link to="/">Home</Link>
+                    </li>
+                    <li className="breadcrumb-item">
+                        <Link to={`/decks/${deckId}`}>{deck.name}</Link>
+                    </li>
+                    <li className="breadcrumb-item active" aria-current="page">
+                        Add Card
+                    </li>
+                </ol>
+            </nav>
+            <h2>{deck.name}: Add Card</h2>
+			<CardForm deckId={deckId} isNew={true} />
         </div>
     );
 

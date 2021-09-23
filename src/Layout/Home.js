@@ -39,7 +39,6 @@ function Home() {
             </div>
 
             <div>
-                You have fetched {decks.length} decks
                 <DeckList decks={decks} />
             </div>
         </div>
