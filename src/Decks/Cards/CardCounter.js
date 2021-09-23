@@ -6,30 +6,11 @@ import { listCards } from "../../utils/api"
 *   Function accepts a single deck object and returns JSX containing a number of how many cards are tied to that deck.
 */
 
-function CardCounter({deckId}) {
-
-    // Cards appear in the form of an array.
-    const [ cards, setCards ] = useState([]);
-
-    useEffect(() => {
-        setCards([]);
-        
-        const abortController = new AbortController();
+function CardCounter({cards}) {
   
-        async function fetchCards() {
-            const cardsData = await listCards(deckId, abortController.signal);
-            setCards(cardsData);
-        }
-
-        fetchCards();
-  
-        return () => abortController.abort();
-
-    }, []);
-
     return (
         <div>
-            {cards.length} cards
+            {cards ? cards.length : 0} cards
         </div>
     );
 

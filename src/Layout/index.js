@@ -4,7 +4,7 @@ import Header from "./Header";
 import Home from "./Home";
 import NotFound from "./NotFound";
 
-import Deck from "../Decks/Deck.js";
+import DeckView from "../Decks/DeckView.js";
 import CreateDeck from "../Decks/CreateDeck.js";
 import EditDeck from "../Decks/EditDeck.js";
 import StudyDeck from "../Decks/StudyDeck.js";
@@ -47,7 +47,7 @@ function Layout() {
           </Route>    
           {/* The View Page for an individual deck */}
           <Route path="/decks/:deckId">
-            <Deck />
+            <DeckView />
           </Route>
           {/* Final option in case no other pages/components can be found */}
           <Route>

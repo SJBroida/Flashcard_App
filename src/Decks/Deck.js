@@ -1,102 +1,56 @@
-import React, { useEffect, useState } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
+import React from "react";
+import {Link, useHistory} from "react-router-dom"
 
-import { deleteDeck, readDeck } from "../utils/api";
+import {deleteDeck} from "../utils/api"
 
 import CardCounter from "./Cards/CardCounter.js";
-import CardList from "./Cards/CardList.js";
 
-/* Deck Structure Example
-    {
-        "id": 1,
-        "name": "Rendering in React",
-        "description": "React's component structure allows for quickly building a complex web application that relies on DOM manipulation. "
-    }
-*/
+function Deck({theDeck}){
 
-function Deck() {
-    // Create useState object to hold deck
-    const [deck, setDeck] = useState({id: "", name: "", description: ""})
-    // Pull parameter information from the URL
-    const params = useParams();
-    // Obtain the deckId from the parameters
-    const deckId = params.deckId;
-    // Create history variable to be used for buttons that go back to Home.
     const history = useHistory();
 
-    useEffect(() => {
-        const abortController = new AbortController();
-        const signal = abortController.signal;
-
-        async function fetchDeck() {
-            // Use the deckId and the AbortController's signal to fetch the current deck.
-            const theDeck = await readDeck(deckId, signal);
-            // Push the obtained deck into the useState object
-            setDeck(theDeck);
-        }
-
-        fetchDeck();
-
-        return () => abortController.abort();
-    }, [deckId]);
-
-    async function deleteDeckHandler(){
+    async function deleteDeckHandler() {
         const abortController = new AbortController();
         const signal = abortController.signal;
         if(
-          window.confirm("Delete this deck?\n\nYou will not be able to recover it.")
+            window.confirm("Delete this deck?\n\nYou will not be able to recover it.")
         ){
-          await deleteDeck(deckId, signal)
-          history.push("/")
+            await deleteDeck(theDeck.id, signal)
+            history.push("/")
         }
-        return () => abortController.abort();
+    return () => abortController.abort();
     }
 
-    return (
-        <div>
-            <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                    <li className="breadcrumb-item">
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li className="breadcrumb-item active" aria-current="page">
-                        {deck.name}
-                    </li>
-                </ol>
-            </nav>
-            <div className="card mb-5" style={{width: "50rem"}}>
-                <div className="card-body">
-                    <h5 className="card-title">{deck.name}</h5>
-                    <h6 className="card-subtitle mb-2 text-muted">
-                        <CardCounter deckId={deckId} />
-                    </h6>
-                    <p className="card-text">{deck.description}</p>
-                    <Link to={`/decks/${deckId}/Edit`} className="card-link">
-                        <button class="btn btn-secondary">
-                            <span className="oi oi-pencil mr-1"></span>
-                            Edit
-                        </button>
-                    </Link>
-                    <Link to={`/decks/${deckId}/study`} className="card-link">
-                        <button className="btn btn-primary">
-                            <span className="oi oi-book mr-1"></span>
-                            Study
-                        </button>
-                    </Link>
-                    <Link to={`/decks/${deckId}/cards/new`} className="card-link">
-                        <button className="btn btn-primary">
-                            <span className="oi oi-plus mr-2"></span>
-                            Add Cards
-                        </button>
-                    </Link>
-                    <button className="btn btn-danger ml-5 float-right" onClick={deleteDeckHandler}>
+    return(
+        <div className="card mb-5" style={{width: "50rem"}}>
+            <div className="card-body">
+                {/* Use CardCounter component to count the cards*/}
+                <h6 className="card-subtitle mb-2 text-muted float-right">
+                    <CardCounter cards={theDeck.cards} />
+                </h6>
+                <h5 className="card-title">{theDeck.name}</h5>
+                <p className="card-text">{theDeck.description}</p>
+                <Link to={`/decks/${theDeck.id}`}>
+                    <button className="btn btn-secondary mr-2">
+                        <span className="oi oi-eye mr-2"></span>
+                        View
+                    </button>
+                </Link>
+                <Link to={`/decks/${theDeck.id}/study`}>
+                    <button className="btn btn-primary">
+                        <span className="oi oi-book mr-2"></span>
+                        Study
+                    </button>
+                </Link>
+                <div className="float-right">
+                    <button className="btn btn-danger" onClick={deleteDeckHandler}>
                         <span className="oi oi-trash"></span>
                     </button>
                 </div>
-            </div>
-            <CardList deckId={deckId}/>
+            </div> {/* End of Class "card-body" */}
         </div>
     );
+
 }
 
 export default Deck;

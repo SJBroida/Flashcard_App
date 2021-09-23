@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-
 import { Link, useParams } from "react-router-dom";
+import { readDeck } from "../utils/api/index";
 
 import StudyCards from "./Cards/StudyCards.js";
-import { readDeck } from "../utils/api/index";
+
 
 /* Deck Structure Example:
     {
@@ -21,7 +21,7 @@ import { readDeck } from "../utils/api/index";
 
 function StudyDeck() {
     // Create a useState object for the deck being studied
-    const [deck, setDeck] = useState({});
+    const [deck, setDeck] = useState({id: "", name: "", description: "", cards: []});
     // Pull parameter information from the URL
     const params = useParams();
     // Obtain the deckId from the parameters
@@ -33,9 +33,9 @@ function StudyDeck() {
         
         async function fetchDeck() {
             // Use the deckId and the AbortController's signal to fetch the current deck.
-            const theDeck = await readDeck(deckId, signal);
+            const deckData = await readDeck(deckId, signal);
             // Push the obtained deck into the useState object
-            setDeck(theDeck);
+            setDeck(deckData);
         }
 
         fetchDeck();
@@ -60,7 +60,7 @@ function StudyDeck() {
                 </ol>
             </nav>
             <h1>Study: {deck.name}</h1>
-            <StudyCards deckId={deckId}/>
+            <StudyCards cards={deck.cards}/>
         </div>
     );
 
