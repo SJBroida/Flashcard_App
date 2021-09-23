@@ -1,24 +1,48 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { createDeck, updateDeck } from "../utils/api";
 
 
-function DeckForm({ 
-    formType, formData, handleChange, handleSubmit, createNamePlaceholder, createDescriptionPlaceholder, handleCreateCancel,
-    handleEditChange, handleEditSubmit, editDeckData, editNamePlaceholder, editDescriptionPlaceholder, handleEditCancel
-})
-{
-    // Variable values are determined depending on if a deck is being created or changed
-    const submit = formType === "Create Deck" ? handleSubmit : handleEditSubmit
-    const change = formType === "Create Deck" ? handleChange : handleEditChange
-    const valueName = formType === "Create Deck" ? formData.name : editDeckData.name
-    const valueDescription = formType === "Create Deck" ? formData.description : editDeckData.description
-    const namePlaceholder = formType === "Create Deck" ? createNamePlaceholder : editNamePlaceholder
-    const descriptionPlaceholder = formType === "Create Deck" ? createDescriptionPlaceholder : editDescriptionPlaceholder
-    const cancel = formType === "Create Deck" ? handleCreateCancel : handleEditCancel
+function DeckForm({ editDesc = "", editName = "", editId = "", isNew }) {
+
+    const [name, setName] = useState("");
+	const [desc, setDesc] = useState("");
+	const newDeck = { name: name, description: desc };
+	const upDeck = { name: name, description: desc, id: editId };
+	const history = useHistory();
+
+    // Event handlers for when changing the name & description of a deck.
+	const handleNameChange = (event) => setName(event.target.value);
+	const handleDescriptionChange = (event) => setDesc(event.target.value);
+
+	useEffect(() => {
+		setName(editName);
+		setDesc(editDesc);
+	}, [editName, editDesc]);
+
+    // Event handler for when creating a deck
+	const handleCreateSubmit = async function (event) {
+		event.preventDefault();
+		let result = await createDeck(newDeck);
+		let deckId = result.id;
+		history.push(`/decks/${deckId}`);
+	};
+
+    // Event handler for when editing a deck
+    const handleEditSubmit = async function (event) {
+		event.preventDefault();
+		let result = await updateDeck(upDeck);
+		let deckId = result.id;
+		history.push(`/decks/${deckId}`);
+	};
 
     return(
         <div>
-            <h2>{formType}</h2>
-            <form onSubmit={submit} className="form-group">
+			<form
+                /* Determine which event handler to use when form is submitted */
+				onSubmit={isNew ? handleCreateSubmit : handleEditSubmit}
+				className="form-group"
+			>
                 <label className="col-form-label" htmlFor="deckName">
                     Name
                 </label>
@@ -26,26 +50,41 @@ function DeckForm({
                     id="deckName"
                     type="text"
                     name="name"
-                    onChange={change}
+                    onChange={handleNameChange}
                     className="form-control"
-                    value={valueName}
-                    placeholder={namePlaceholder}
+                    value={name}
+                    placeholder="Deck Name"
                 />
                 <br></br>
-                <label htmlFor="deckDescription">Description</label>
+
+                <label htmlFor="deckDescription">
+                    Description
+                </label>
                 <textarea
                     id="deckDescription"
                     name="description"
-                    onChange={change}
+                    onChange={handleDescriptionChange}
                     className="form-control"
-                    value={valueDescription}
+                    value={desc}
                     rows="3"
-                    placeholder={descriptionPlaceholder}
+                    placeholder="Deck Description"
                 />
                  <br></br>
-                <button className="btn btn-secondary" onClick={cancel}>Cancel </button>
-                <button className="btn btn-primary ml-2" type="submit">Submit</button>    
-            </form>
+
+                <button 
+                    className="btn btn-secondary" 
+                    /* On Click, use anonymous event handlerto go back one page in history */
+					onClick={(e) => {
+						e.preventDefault();
+						history.go(-1);
+					}}
+                >
+                    Cancel{" "}
+                </button>
+                <button className="btn btn-primary ml-2" type="submit">
+                    Submit
+                </button>    
+            </form> {/* End of Form for modifying or creating a deck */}
         </div>
         
     );

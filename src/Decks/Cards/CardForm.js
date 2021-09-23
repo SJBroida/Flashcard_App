@@ -40,6 +40,7 @@ function CardForm({ editFront = "", editBack = "", deckId, cardId, isNew }) {
 
 	return (
 		<div className="">
+			{/* Determine if the CardForm is called by EditCard or AddCard */}
 			<form onSubmit={isNew ? handleCreateSubmit : handleEditSubmit}>
 				<div className="row">
 					<label htmlFor="front" className="form-label ml-3">
@@ -78,11 +79,9 @@ function CardForm({ editFront = "", editBack = "", deckId, cardId, isNew }) {
 						className="btn btn-secondary ml-3"
 						onClick={(e) => {
 							e.preventDefault();
-
 							history.go(-1);
 						}}
 					>
-						
 						{isNew ? "Done" : "Cancel"}
 					</button>
 					<button type="submit" className="btn btn-primary ml-2">

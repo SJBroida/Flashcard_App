@@ -1,7 +1,7 @@
-import React , {useEffect, useState} from "react";
-import {useHistory, useParams, Link} from "react-router-dom";
+import React , { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 
-import {readDeck, updateDeck} from "../utils/api";
+import { readDeck } from "../utils/api";
 
 import DeckForm from "./DeckForm";
 
@@ -15,76 +15,30 @@ import DeckForm from "./DeckForm";
 
 function EditDeck() {
 
-    const [currentDeck, setCurrentDeck] = useState({});
-    // This is the information that will pre-fill the Name and Description forms
-    // on the Edit Deck screen.
-    const [editDeckData, setEditDeckData] = useState({});
-    const history = useHistory();
     // Obtain the deckId from the URL Parameters
     const params = useParams();
     const deckId = params.deckId;
+    // Create Use State instance for Deck being changed
+    const [deck, setDeck] = useState({});
 
-    const formType = "Edit Deck";
+    // This is the information that will pre-fill the Name and Description forms
+    // on the Edit Deck screen.
 
     useEffect(() => {
 
         const abortController = new AbortController();
         const signal = abortController.signal;
 
-        async function fetchDecks() {
-          const decksData = await readDeck(deckId, signal);
-          setCurrentDeck(decksData);
+        async function fetchDeck() {
+          const deckData = await readDeck(deckId, signal);
+          setDeck(deckData);
         }
 
-        fetchDecks();
-        // Immediately after fetching the Deck, get the deck's name and description
-        const {theName, theDescription} = currentDeck;
-        // Create Initial Deck Object Data
-        const initialEditDeckData = {
-            name: theName,
-            description: theDescription,
-            id: deckId
-        };
-        // Set the Edit Deck Data to be passed
-        setEditDeckData(initialEditDeckData);
+        fetchDeck();
 
         return () => abortController.abort();
     
     }, [deckId]);
-
-    async function handleEditSubmit(event){
-        event.preventDefault();
-        const abortController = new AbortController();
-        const signal = abortController.signal;
-
-        await updateDeck(editDeckData, signal);
-        history.push(`/decks/${deckId}`);
-       
-        return() => abortController.abort();
-    }
-
-    const handleEditChange = ({target}) => {
-        setEditDeckData({
-            ...editDeckData, 
-            [target.name] : target.value
-        });
-    }
-
-    async function handleEditSubmit(event){
-        event.preventDefault();
-        const abortController = new AbortController();
-        const signal = abortController.signal;
-
-        await updateDeck(editDeckData, signal);
-        history.push(`/decks/${deckId}`);
-       
-        return() => abortController.abort();
-    }
-
-    const handleEditCancel = (e) => {
-        e.preventDefault();
-        history.push(`/decks/${deckId}`);
-    }  
 
     return (
         <div>
@@ -95,21 +49,19 @@ function EditDeck() {
                         <Link to="/">Home</Link>
                     </li>
                     <li className="breadcrumb-item">
-                        <Link to={`/decks/${deckId}`}>{currentDeck.name}</Link>
+                        <Link to={`/decks/${deckId}`}>{deck.name}</Link>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
                         Edit Deck
                     </li>
                 </ol>
             </nav>
+            {/* Call the Deck Form HTML */}
             <DeckForm
-                formType={formType} 
-                handleEditChange={handleEditChange}
-                handleEditSubmit={handleEditSubmit}
-                editDeckData={editDeckData}
-                editNamePlaceholder={currentDeck.name}
-                editDescriptionPlaceholder={currentDeck.description}
-                handleEditCancel={handleEditCancel}
+                editDesc={deck.description}
+                editName={deck.name}
+                editId={deckId}
+                isNew={false}
             />
         </div>
     );

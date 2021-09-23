@@ -13,36 +13,6 @@ import DeckForm from "./DeckForm";
 
 function CreateDeck() {
 
-    const formType = "Create Deck";
-    const createNamePlaceholder = "Deck name";
-    const createDescriptionPlaceholder = "Deck description";
-
-    const initialFormData = {
-        name: "",
-        description: "",
-    };
-
-    const [formData, setFormData] = useState(initialFormData);
-    const history = useHistory();
-
-    const handleChange = ({target}) => {
-        setFormData({
-            ...formData,
-            [target.name] : target.value,
-        });
-    }
-
-    async function handleSubmit(e) {
-        e.preventDefault();
-        const {id} = await createDeck(formData);
-        history.push(`/decks/${id}`);
-    }
-
-    const handleCreateCancel = (e) => {
-        e.preventDefault();
-        history.push("/");
-    }
-
     return (
         <div>
             {/* Insert the code for the page navigation here */}
@@ -56,15 +26,8 @@ function CreateDeck() {
                     </li>
                 </ol>
             </nav>
-            <DeckForm 
-                formType={formType}
-                formData={formData}
-                handleChange={handleChange}
-                handleSubmit={handleSubmit}
-                createNamePlaceholder={createNamePlaceholder}
-                createDescriptionPlaceholder={createDescriptionPlaceholder}
-                handleCreateCancel={handleCreateCancel}
-            />
+            {/* Call the Deck Form HTML */}
+            <DeckForm isNew={true} />
         </div>
     );
 
